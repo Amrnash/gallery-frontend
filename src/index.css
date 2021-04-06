@@ -1,13 +1,95 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+img {
+  width: 100%;
+  height: 100%;
+  transition: 0.5s ease;
+  object-fit: cover;
+  cursor: pointer;
+}
+.img-container {
+  position: relative;
+  overflow: hidden;
+}
+.overlay {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  transform: translateX(-500px);
+  transition: 0.5s ease;
+  background: rgba(110, 109, 109, 0.7);
+  cursor: pointer;
+}
+.img-container:hover .overlay {
+  transform: translateX(0);
+}
+.img-container:hover img {
+  transform: scale(1.05);
+}
+.overlay-text {
+  color: #eee;
+}
+
+/* styling the file input */
+.file-input {
+  position: relative;
+}
+.file {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+}
+.file-input label {
+  display: block;
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  border: 1px solid #6c757d;
+  font-size: 30px;
+  padding-bottom: 3px;
+}
+.file-input label:hover {
+  background: #6c757d;
+  color: white;
+}
+.file-name {
+  position: absolute;
+  font-size: 0.85rem;
+  color: #555;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.avatar {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  background: #555;
 }
