@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Container, Form } from "react-bootstrap";
+import { store } from "../store";
+import Axios from "../axios";
 
-const Login = () => {
+const Signup = ({ history }) => {
   const inValidStyles = {
     border: "1px solid red",
   };
+  const [slelectedPhoto, setSelectedPhoto] = useState(null);
+  const { dispatch, state } = useContext(store);
   const isNotMatch = () => {
     if (formik.values.password !== formik.values.confirmPassword) {
       return true;
@@ -35,9 +39,26 @@ const Login = () => {
         .min(4, "password cannot be less than 4 characters")
         .required("password is required"),
     }),
-    onSubmit: (values) => {
-      const { email, password } = values;
-      console.log(email, password);
+    onSubmit: async (values) => {
+      try {
+        const { email, password, name } = values;
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("avatar", slelectedPhoto, slelectedPhoto.name);
+        dispatch({ type: "AUTH_REQUEST" });
+        const { data } = await Axios.post(
+          "/user/signup",
+          formData
+        );
+        dispatch({ type: "AUTH_SUCCESS", payload: data });
+        history.push("/profile");
+        console.log(state);
+      } catch (error) {
+        dispatch({ type: "AUTH_FAIL", payload: error });
+        console.log(state);
+      }
     },
   });
   return (
@@ -123,10 +144,16 @@ const Login = () => {
               Passwords don't match
             </Form.Text>
           )}
+          <Form.File
+            label="Upload profile pic"
+            name="avatar"
+            onChange={(e) => setSelectedPhoto(e.target.files[0])}
+          />
           <Button
             variant="secondary"
             style={{ width: "100%" }}
             className="mt-4"
+            type="submit"
           >
             Login
           </Button>
@@ -135,4 +162,4 @@ const Login = () => {
     </>
   );
 };
-export default Login;
+export default Signup;

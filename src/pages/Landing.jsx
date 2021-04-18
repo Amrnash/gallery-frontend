@@ -16,15 +16,14 @@ const Landing = () => {
         Welcome To Gallery
       </h1>
       <Row className="my-2" as="div">
-        {imageUrls.map((url) => {
+        {imageUrls.map((url, idx) => {
           return (
-            <Col xlg={3} lg={4} sm={6} className="my-2">
-              <ImageItem url={url} />
+            <Col xlg={3} lg={4} sm={6} className="my-2" key={idx}>
+              <ImageItem url={url} showData />
             </Col>
           );
         })}
       </Row>
-      <UploadImage />
     </Container>
   );
 };

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Container, Form } from "react-bootstrap";
-
-const Login = () => {
+import { store } from "../store";
+import Axios from "../axios";
+const Login = ({ history }) => {
+  const { state, dispatch } = useContext(store);
   const inValidStyles = {
     border: "1px solid red",
   };
@@ -21,9 +23,23 @@ const Login = () => {
         .min(4, "password cannot be less than 4 characters")
         .required("password is required"),
     }),
-    onSubmit: (values) => {
-      const { email, password } = values;
-      console.log(email, password);
+    onSubmit: async (values) => {
+      try {
+        const { email, password } = values;
+        dispatch({ type: "AUTH_REQUEST" });
+        const { data } = await Axios.post(
+          "/user/login",
+          {
+            email,
+            password,
+          }
+        );
+        dispatch({ type: "AUTH_SUCCESS", payload: data });
+        console.log(state);
+        history.push("/profile");
+      } catch (error) {
+        dispatch({ type: "AUTH_FAIL", payload: error });
+      }
     },
   });
   return (
@@ -71,6 +87,7 @@ const Login = () => {
             </Form.Text>
           )}
           <Button
+            type="submit"
             variant="secondary"
             style={{ width: "100%" }}
             className="mt-4"

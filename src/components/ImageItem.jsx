@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import DetailsModal from "../components/DetailsModal";
-const ImageItem = ({ url }) => {
+const ImageItem = ({ url, showData }) => {
   const [modalShow, setModalShow] = useState(false);
   return (
     <>
       <div className="img-container" onClick={() => setModalShow(true)}>
         <img src={url} />
-        <div className="overlay">
-          <h1 className="overlay-text">some data</h1>
-        </div>
+        {showData && (
+          <div className="overlay">
+            <h1 className="overlay-text">some data</h1>
+          </div>
+        )}
       </div>
       <DetailsModal
         imageUrl={url}

@@ -11,7 +11,7 @@ const UploadImage = () => {
     setFileName(name);
   };
   return (
-    <div className="file-input d-flex justify-content-center align-items-center my-5">
+    <div className="file-input d-flex justify-content-center align-items-center mt-5">
       <input
         type="file"
         onChange={(e) => handleChange(e)}
