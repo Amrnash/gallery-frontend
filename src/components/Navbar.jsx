@@ -1,7 +1,16 @@
-import React from "react";
+import React, {useContext} from "react";
+import {store} from '../store';
 import { Nav, Navbar, NavDropdown, Container } from "react-bootstrap";
+import {useHistory} from 'react-router-dom';
 import { Link } from "react-router-dom";
 const GalleryNavbar = () => {
+  const {state, dispatch} = useContext(store);
+  const history = useHistory();
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    dispatch({type: 'RESET'})
+    history.push('/');
+  }
   return (
     <Navbar bg="light" expand="lg" className="d-flex justify-content-between">
       <Container>
@@ -14,9 +23,9 @@ const GalleryNavbar = () => {
             <Nav.Link to="/" as={Link}>
               Home
             </Nav.Link>
-            <NavDropdown title="username">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            </NavDropdown>
+            {state.user.user ? (<NavDropdown title={state.user.user.name}>
+              <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+            </NavDropdown>): null}
             <Nav.Link to="/login" as={Link}>
               Login
             </Nav.Link>

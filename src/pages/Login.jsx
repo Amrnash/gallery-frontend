@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Container, Form } from "react-bootstrap";
@@ -35,13 +35,17 @@ const Login = ({ history }) => {
           }
         );
         dispatch({ type: "AUTH_SUCCESS", payload: data });
-        console.log(state);
         history.push("/profile");
       } catch (error) {
         dispatch({ type: "AUTH_FAIL", payload: error });
       }
     },
   });
+  useEffect(() => {
+    if(state.user) {
+      localStorage.setItem("user", JSON.stringify(state.user));
+    }
+  }, [state])
   return (
     <>
       <Container className="d-flex justify-content-center flex-column align-items-center mt-5">

@@ -1,9 +1,12 @@
 import React, { createContext, useReducer } from "react";
 const store = createContext({});
 const { Provider } = store;
+const userFromLocalstorage = localStorage.getItem("user")
+  ? JSON.parse(localStorage.getItem("user"))
+  : {};
 const initialState = {
   isAuth: false,
-  user: {},
+  user: userFromLocalstorage,
   error: "",
 };
 const StateProvider = ({ children }) => {
@@ -20,6 +23,8 @@ const StateProvider = ({ children }) => {
         };
       case "AUTH_SUCCESS":
         return { ...state, loading: false, isAuth: true, user: action.payload };
+      case "RESET":
+        return { ...initialState };
       default:
         return state;
     }

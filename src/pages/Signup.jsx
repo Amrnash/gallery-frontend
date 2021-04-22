@@ -20,6 +20,7 @@ const Signup = ({ history }) => {
     initialValues: {
       name: "",
       email: "",
+      bio: "",
       password: "",
       confirmPassword: "",
     },
@@ -41,10 +42,11 @@ const Signup = ({ history }) => {
     }),
     onSubmit: async (values) => {
       try {
-        const { email, password, name } = values;
+        const { email, password, name, bio } = values;
         const formData = new FormData();
         formData.append("name", name);
         formData.append("email", email);
+        formData.append("bio", bio);
         formData.append("password", password);
         formData.append("avatar", slelectedPhoto, slelectedPhoto.name);
         dispatch({ type: "AUTH_REQUEST" });
@@ -54,7 +56,7 @@ const Signup = ({ history }) => {
         );
         dispatch({ type: "AUTH_SUCCESS", payload: data });
         history.push("/profile");
-        console.log(state);
+        localStorage.setItem("user", JSON.stringify(state.user));
       } catch (error) {
         dispatch({ type: "AUTH_FAIL", payload: error });
         console.log(state);
@@ -101,6 +103,18 @@ const Signup = ({ history }) => {
               {formik.errors.email}
             </Form.Text>
           )}
+          <Form.Control
+            type="text"
+            name="bio"
+            id="bio"
+            as="textarea"
+            rows={6}
+            value={formik.values.bio}
+            placeholder="Tell us about yourself"
+            className={`mt-4`}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
           <Form.Control
             type="password"
             name="password"
@@ -155,7 +169,7 @@ const Signup = ({ history }) => {
             className="mt-4"
             type="submit"
           >
-            Login
+            Signup
           </Button>
         </Form>
       </Container>
