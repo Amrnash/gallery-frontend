@@ -8,20 +8,22 @@ const Profile = () => {
   const { dispatch, state} = useContext(store);
   const [imageUrls, setImageUrls] = useState([]);
   const {user: { user }} = state;
-  // const imageUrls = []
   let decoder = new TextDecoder()
   let base64ImageData = new Uint8Array(user.avatar.data)
   base64ImageData = decoder.decode(base64ImageData);
-  useEffect(async () => {
+  // fetch the user images from the backend
+  useEffect(() => {
     const buffer = [];
     user.images.forEach((url) => {
       const imgName = url.split('\\')[5];
       buffer.push(`/uploads/${imgName}`);
     })
     setImageUrls(buffer)
-    const {data} = await Axios.get(`/user/${user._id}`);
-    console.log(data);
-  },[state])
+  }, [state])
+  // useEffect(async () => {
+  //   const {data} = await Axios.get(`/user/user-uploads/${user._id}`);
+  //   console.log(data);
+  // },[])
   return (
     <>
       <Container>

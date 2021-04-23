@@ -1,9 +1,12 @@
 import React, { useState, useContext } from "react";
 import {ProgressBar} from 'react-bootstrap';
 import Axios from '../axios'
+import { store } from "../store";
 const UploadImage = () => {
   const [fileName, setFileName] = useState(null);
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
+  const {state, dispatch} = useContext(store);
+  const {user: { user }} = state;
   const handleChange = async (e) => {
     const selectedFile = e.target.files[0];
     const { name } = selectedFile;
@@ -11,13 +14,15 @@ const UploadImage = () => {
     const form = new FormData();
     form.append("upload", selectedFile);
     const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwN2M5YjRlMjIyMmI2MGYzYzZkYmZkYyIsImlhdCI6MTYxODc3ODk1OSwiZXhwIjoxNjIxMzcwOTU5fQ.SVPBELSY9m79Xh9YPBVDSqiQLOzuBRk1o6DfAN9aAM4";
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwN2Y1MTcxODI0OGJmMzJhYzFhYzRhMSIsImlhdCI6MTYxOTEzMDM0MCwiZXhwIjoxNjIxNzIyMzQwfQ.buHVZ9PzzJBr9Y36xzWRpqTARV8wsHtKZjwJxZ9akJU";
     try {
-      const { data } = await Axios.put(`/user/upload`, form, {
+        await Axios.put(`/user/upload`, form, {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: data => setProgress(Math.round(100 * data.loaded / data.total))
     });
-      console.log(data);      
+      const {data} = await Axios.get(`/user/user-uploads/${user._id}`);
+      console.log(data);
+      dispatch({type: 'IMAGES_UPDATE', payload: data});
     } catch (error) {
       console.log(error);
     }
