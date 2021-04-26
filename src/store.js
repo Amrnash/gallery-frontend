@@ -26,9 +26,12 @@ const StateProvider = ({ children }) => {
       case "IMAGES_UPDATE":
         const { images } = action.payload;
         console.log("images: ", images);
-        return { ...state, "user.images": images };
+        return {
+          ...state,
+          user: { ...state.user, user: { ...state.user.user, images } },
+        };
       case "RESET":
-        return { ...initialState };
+        return { ...initialState, user: {} };
       default:
         return state;
     }

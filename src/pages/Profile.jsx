@@ -20,10 +20,6 @@ const Profile = () => {
     })
     setImageUrls(buffer)
   }, [state])
-  // useEffect(async () => {
-  //   const {data} = await Axios.get(`/user/user-uploads/${user._id}`);
-  //   console.log(data);
-  // },[])
   return (
     <>
       <Container>
@@ -36,7 +32,7 @@ const Profile = () => {
             />
         </section>
         <section
-          className="d-flex justify-conent-center"
+          className="d-flex justify-content-center mt-5"
           style={{ borderBottom: "1px solid #eee" }}
         >
           <p className="lead text-center">

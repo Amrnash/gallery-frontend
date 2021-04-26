@@ -25,13 +25,15 @@ const GalleryNavbar = () => {
             </Nav.Link>
             {state.user.user ? (<NavDropdown title={state.user.user.name}>
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-            </NavDropdown>): null}
-            <Nav.Link to="/login" as={Link}>
+            </NavDropdown>): (<>
+              <Nav.Link to="/login" as={Link}>
               Login
             </Nav.Link>
             <Nav.Link to="/signup" as={Link}>
               Signup
             </Nav.Link>
+            </>)}
+            
           </Nav>
         </Navbar.Collapse>
       </Container>
