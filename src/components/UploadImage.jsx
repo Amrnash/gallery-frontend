@@ -14,15 +14,15 @@ const UploadImage = () => {
     setFileName(name);
     const form = new FormData();
     form.append("upload", selectedFile);
-    console.log(user.token)
     try {
         await Axios.put(`/user/upload`, form, {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: data => setProgress(Math.round(100 * data.loaded / data.total))
     });
       setProgress(0);
-      const {data} = await Axios.get(`/user/user-uploads/${user._id}`, {headers: { Authorization: `Bearer ${token}` }});  
+      const {data} = await Axios.get(`/image/user-images`, {headers: { Authorization: `Bearer ${token}` }});  
       dispatch({type: 'IMAGES_UPDATE', payload: data});
+      console.log('dispatched')
     } catch (error) {
       console.log(error);
     }
