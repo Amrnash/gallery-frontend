@@ -20,8 +20,9 @@ const UploadImage = () => {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: data => setProgress(Math.round(100 * data.loaded / data.total))
     });
-      const {data} = await Axios.get(`/user/user-uploads/${user._id}`);
-      console.log(data);
+      console.log('sending request')
+      const data = await Axios.get(`/user/user-uploads/${user._id}`);
+      console.log('data: ', data);
       dispatch({type: 'IMAGES_UPDATE', payload: data});
     } catch (error) {
       console.log(error);

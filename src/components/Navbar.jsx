@@ -24,6 +24,7 @@ const GalleryNavbar = () => {
               Home
             </Nav.Link>
             {state.user.user ? (<NavDropdown title={state.user.user.name}>
+              <NavDropdown.Item as={Link} to="/profile">Profile</NavDropdown.Item>
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
             </NavDropdown>): null}
             <Nav.Link to="/login" as={Link}>
