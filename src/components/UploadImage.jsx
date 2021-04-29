@@ -7,23 +7,22 @@ const UploadImage = () => {
   const [progress, setProgress] = useState(0);
   const {state, dispatch} = useContext(store);
   const {user: { user }} = state;
+  const {user: {token}} = state;
   const handleChange = async (e) => {
     const selectedFile = e.target.files[0];
     const { name } = selectedFile;
     setFileName(name);
     const form = new FormData();
     form.append("upload", selectedFile);
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwN2Y1MTcxODI0OGJmMzJhYzFhYzRhMSIsImlhdCI6MTYxOTEzMDM0MCwiZXhwIjoxNjIxNzIyMzQwfQ.buHVZ9PzzJBr9Y36xzWRpqTARV8wsHtKZjwJxZ9akJU";
     try {
         await Axios.put(`/user/upload`, form, {
         headers: { Authorization: `Bearer ${token}` },
         onUploadProgress: data => setProgress(Math.round(100 * data.loaded / data.total))
     });
-      console.log('sending request')
-      const data = await Axios.get(`/user/user-uploads/${user._id}`);
-      console.log('data: ', data);
+      setProgress(0);
+      const {data} = await Axios.get(`/image/user-images`, {headers: { Authorization: `Bearer ${token}` }});  
       dispatch({type: 'IMAGES_UPDATE', payload: data});
+      console.log('dispatched')
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +39,7 @@ const UploadImage = () => {
       <label htmlFor="file">+</label>
       <p class="file-name mt-5">{fileName}</p>
     </div>
-      <ProgressBar now={progress} variant="secondary" className="mt-3 mb-5" label={`${progress}%`} />
+      {progress && <ProgressBar now={progress} variant="secondary" className="mt-3 mb-5" label={`${progress}%`} />}
     </>
   );
 };

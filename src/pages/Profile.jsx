@@ -8,22 +8,29 @@ const Profile = () => {
   const { dispatch, state} = useContext(store);
   const [imageUrls, setImageUrls] = useState([]);
   const {user: { user }} = state;
+  const { user: {token }} = state;
   let decoder = new TextDecoder()
   let base64ImageData = new Uint8Array(user.avatar.data)
   base64ImageData = decoder.decode(base64ImageData);
-  // fetch the user images from the backend
-  useEffect(() => {
-    const buffer = [];
-    user.images.forEach((url) => {
-      const imgName = url.split('\\')[5];
-      buffer.push(`/uploads/${imgName}`);
-    })
-    setImageUrls(buffer)
+  // fetch the data when the component mount for the first time
+  useEffect(async () => {
+      const {data} = await Axios.get('/image/user-images', {headers: {Authorization: `Bearer ${token}`}});
+      dispatch({type: 'IMAGES_UPDATE', payload: data});
+  },[])
+  // whenever the state changes if the length
+  useEffect(async () => {
+    let urls;
+    if(state.images) {
+      if(state.images.length !== imageUrls.length ) {
+        const {data} = await Axios.get('/image/user-images', {headers: {Authorization: `Bearer ${token}`}});
+        dispatch({type: 'IMAGES_UPDATE', payload: data});
+        urls = data.map(obj => obj.imagePath.split('\\').slice(3).join('/'));
+        if(imageUrls.length !== urls.length) {
+          setImageUrls(urls);
+        }
+      }
+    }
   }, [state])
-  // useEffect(async () => {
-  //   const {data} = await Axios.get(`/user/user-uploads/${user._id}`);
-  //   console.log(data);
-  // },[])
   return (
     <>
       <Container>
@@ -32,11 +39,11 @@ const Profile = () => {
             <img
               src={`data:image/gif;base64,${base64ImageData}`}
               alt="profile image"
-              style={{ borderRadius: 5, border: "1px solid #eee", padding: 5, width: 250,  height: 250 }}
+              style={{ borderRadius: 50, border: "1px solid #eee", padding: 5, width: 250,  height: 250 }}
             />
         </section>
         <section
-          className="d-flex justify-conent-center"
+          className="d-flex justify-content-center mt-5"
           style={{ borderBottom: "1px solid #eee" }}
         >
           <p className="lead text-center">
@@ -49,7 +56,7 @@ const Profile = () => {
             {imageUrls.map((url, idx) => {
               return (
                 <Col xlg={3} lg={4} sm={6} className="my-2" key={idx}>
-                  <ImageItem url={'http://localhost:7000' + url} />
+                  <ImageItem url={'http://localhost:7000/' + url} />
                 </Col>
               );
             })}
