@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DetailsModal from "../components/DetailsModal";
-const ImageItem = ({ url, showData }) => {
+import Axios from "../axios";
+const ImageItem = ({ imageDetails, showData, modal }) => {
   const [modalShow, setModalShow] = useState(false);
+  const [user, setUser] = useState(null);
+  async function getUserByID() {
+    const { data } = await Axios.get(`/user/${imageDetails.user}`);
+    setUser(data);
+  }
+  useEffect(() => {
+    getUserByID();
+  }, [setUser]);
+  const url =
+    "http://localhost:7000/" +
+    imageDetails.imagePath.split("\\").slice(5).join("/");
   return (
     <>
       <div className="img-container" onClick={() => setModalShow(true)}>
         <img src={url} />
-        {showData && (
+        {/* {showData && (
           <div className="overlay">
             <h1 className="overlay-text">some data</h1>
           </div>
-        )}
+        )} */}
       </div>
-      <DetailsModal
-        imageUrl={url}
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-      />
+      {modal && user && (
+        <DetailsModal
+          imageUrl={url}
+          imageId={imageDetails._id}
+          user={user}
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+        />
+      )}
     </>
   );
 };
