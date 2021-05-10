@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import ImageItem from "../components/ImageItem";
+import Paginate from "../components/Paginate";
 import Axios from "../axios";
-const Landing = () => {
+import { store } from "../store";
+const Landing = ({ match }) => {
   const [images, setImages] = useState([]);
+  const { state, dispatch } = useContext(store);
+  const pageNumber = match.params.pageNumber || 1;
+  console.log(pageNumber);
   // get the recent images
   useEffect(() => {
     async function getData() {
-      const { data } = await Axios.get("/image?limit=10");
-      setImages(data);
+      if (state.images !== images) {
+        const { data } = await Axios.get(`/image?pageNumber=${pageNumber}`);
+        setImages(data.images);
+        dispatch({ type: "IMAGE_LIST_SUCCESS", payload: data });
+      }
     }
     getData();
-  }, []);
+  }, [state, pageNumber]);
   return (
     <Container>
       <h1 className="text-center mt-5 mb-5 text-secondary">
@@ -26,6 +34,9 @@ const Landing = () => {
           );
         })}
       </Row>
+      <div className="d-flex justify-content-center">
+        <Paginate pages={state.pages} page={state.page} />
+      </div>
     </Container>
   );
 };

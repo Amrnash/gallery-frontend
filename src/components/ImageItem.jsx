@@ -30,6 +30,7 @@ const ImageItem = ({ imageDetails, showData, modal }) => {
           imageId={imageDetails._id}
           user={user}
           show={modalShow}
+          setShow={setModalShow}
           onHide={() => setModalShow(false)}
         />
       )}

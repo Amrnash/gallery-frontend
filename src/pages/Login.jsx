@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { Button, Container, Form } from "react-bootstrap";
 import { store } from "../store";
 import Axios from "../axios";
+import Error from "../components/Error";
 const Login = ({ history }) => {
   const { state, dispatch } = useContext(store);
   const inValidStyles = {
@@ -27,25 +28,22 @@ const Login = ({ history }) => {
       try {
         const { email, password } = values;
         dispatch({ type: "AUTH_REQUEST" });
-        const { data } = await Axios.post(
-          "/user/login",
-          {
-            email,
-            password,
-          }
-        );
+        const { data } = await Axios.post("/user/login", {
+          email,
+          password,
+        });
         dispatch({ type: "AUTH_SUCCESS", payload: data });
         history.push("/profile");
       } catch (error) {
-        dispatch({ type: "AUTH_FAIL", payload: error });
+        dispatch({ type: "AUTH_FAIL", payload: error.response.data.message });
       }
     },
   });
   useEffect(() => {
-    if(state.user) {
+    if (state.user) {
       localStorage.setItem("user", JSON.stringify(state.user));
     }
-  }, [state])
+  }, [state]);
   return (
     <>
       <Container className="d-flex justify-content-center flex-column align-items-center mt-5">
@@ -56,6 +54,7 @@ const Login = ({ history }) => {
             width: "60%",
           }}
         >
+          {state.error && <Error message={state.error} />}
           <Form.Control
             type="text"
             name="email"

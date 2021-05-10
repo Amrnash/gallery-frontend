@@ -23,11 +23,20 @@ const StateProvider = ({ children }) => {
         };
       case "AUTH_SUCCESS":
         return { ...state, loading: false, isAuth: true, user: action.payload };
+      case "IMAGE_LIST_SUCCESS":
+        return {
+          ...state,
+          images: action.payload.images,
+          pages: action.payload.pages,
+          page: action.payload.page,
+        };
       case "IMAGES_UPDATE":
         return {
           ...state,
           images: action.payload,
         };
+      case "RESET_ERROR":
+        return { ...state, error: "" };
       case "RESET":
         return { ...initialState, user: {} };
       default:

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Button, Container, Form } from "react-bootstrap";
 import { store } from "../store";
 import Axios from "../axios";
-
+import Error from "../components/Error";
 const Signup = ({ history }) => {
   const inValidStyles = {
     border: "1px solid red",
@@ -50,16 +50,13 @@ const Signup = ({ history }) => {
         formData.append("password", password);
         formData.append("avatar", slelectedPhoto, slelectedPhoto.name);
         dispatch({ type: "AUTH_REQUEST" });
-        const { data } = await Axios.post(
-          "/user/signup",
-          formData
-        );
+        const { data } = await Axios.post("/user/signup", formData);
         dispatch({ type: "AUTH_SUCCESS", payload: data });
         history.push("/profile");
         localStorage.setItem("user", JSON.stringify(state.user));
       } catch (error) {
-        dispatch({ type: "AUTH_FAIL", payload: error });
-        console.log(state);
+        dispatch({ type: "AUTH_FAIL", payload: error.response.data.message });
+        console.log(error.response.data.message);
       }
     },
   });
@@ -73,6 +70,7 @@ const Signup = ({ history }) => {
             width: "60%",
           }}
         >
+          {state.error && <Error message={state.error} />}
           <Form.Control
             type="text"
             name="name"
